@@ -1,4 +1,4 @@
-import { unit } from '@ant-design/cssinjs';
+import { CSSObject, unit } from '@ant-design/cssinjs';
 
 import {
   genBasicInputStyle,
@@ -43,6 +43,31 @@ export const genRadiusStyle = (
   };
 };
 
+export const genSuffixStyle = (token: InputNumberToken): CSSObject => {
+  const { componentCls, inputAffixPadding, paddingInline, motionDurationMid } = token;
+
+  return {
+    color: 'inherit',
+
+    '&-suffix': {
+      display: 'flex',
+      flex: 'none',
+      alignItems: 'center',
+      pointerEvents: 'none',
+      insetBlockStart: 0,
+      insetInlineEnd: 0,
+      height: '100%',
+      marginInlineEnd: paddingInline,
+      marginInlineStart: inputAffixPadding,
+      transition: `all ${motionDurationMid}`,
+    },
+
+    [`&:hover ${componentCls}-suffix`]: {
+      marginInlineEnd: `calc(${paddingInline} + ${token.handleWidth})`,
+    },
+  };
+};
+
 const genInputNumberStyles: GenerateStyle<InputNumberToken> = (token: InputNumberToken) => {
   const {
     componentCls,
@@ -69,7 +94,6 @@ const genInputNumberStyles: GenerateStyle<InputNumberToken> = (token: InputNumbe
     borderRadiusSM,
     borderRadiusLG,
     controlWidth,
-    handleOpacity,
     handleBorderColor,
     filledHandleBg,
     lineHeightLG,
@@ -82,7 +106,8 @@ const genInputNumberStyles: GenerateStyle<InputNumberToken> = (token: InputNumbe
         ...resetComponent(token),
         ...genBasicInputStyle(token),
 
-        display: 'inline-block',
+        display: 'flex',
+        alignItems: 'center',
         width: controlWidth,
         margin: 0,
         padding: 0,
@@ -112,6 +137,7 @@ const genInputNumberStyles: GenerateStyle<InputNumberToken> = (token: InputNumbe
           },
         }),
         ...genBorderlessStyle(token),
+        ...genSuffixStyle(token),
 
         '&-rtl': {
           direction: 'rtl',
@@ -214,6 +240,10 @@ const genInputNumberStyles: GenerateStyle<InputNumberToken> = (token: InputNumbe
         },
 
         [componentCls]: {
+          '&-input-wrap': {
+            flex: 1,
+          },
+
           '&-input': {
             ...resetComponent(token),
             width: '100%',
@@ -242,25 +272,32 @@ const genInputNumberStyles: GenerateStyle<InputNumberToken> = (token: InputNumbe
     // Handler
     {
       [componentCls]: {
-        [`&:hover ${componentCls}-handler-wrap, &-focused ${componentCls}-handler-wrap`]: {
-          opacity: 1,
+        '&:hover, &-focused': {
+          [`${componentCls}-handler-wrap`]: {
+            width: token.handleWidth,
+          },
+        },
+        '&-affix-wrapper': {
+          [`&:hover ${componentCls}-handler-wrap`]: {
+            width: token.handleWidth,
+          },
         },
 
         [`${componentCls}-handler-wrap`]: {
           position: 'absolute',
           insetBlockStart: 0,
           insetInlineEnd: 0,
-          width: token.handleWidth,
+          width: 0,
           height: '100%',
           borderStartStartRadius: 0,
           borderStartEndRadius: borderRadius,
           borderEndEndRadius: borderRadius,
           borderEndStartRadius: 0,
-          opacity: handleOpacity,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'stretch',
-          transition: `opacity ${motionDurationMid} linear ${motionDurationMid}`,
+          overflow: 'hidden',
+          transition: `width ${motionDurationMid}`,
 
           // Fix input number inside Menu makes icon too large
           // We arise the selector priority by nest selector here
@@ -380,8 +417,8 @@ const genAffixWrapperStyles: GenerateStyle<InputNumberToken> = (token: InputNumb
 
       ...genBasicInputStyle(token),
       // or number handler will cover form status
-      position: 'relative',
-      display: 'inline-flex',
+      display: 'flex',
+      alignItems: 'center',
       width: controlWidth,
       padding: 0,
       paddingInlineStart: paddingInline,
@@ -438,29 +475,15 @@ const genAffixWrapperStyles: GenerateStyle<InputNumberToken> = (token: InputNumb
       },
 
       [componentCls]: {
-        color: 'inherit',
-
-        '&-prefix, &-suffix': {
+        '&-prefix': {
           display: 'flex',
           flex: 'none',
           alignItems: 'center',
           pointerEvents: 'none',
-        },
-
-        '&-prefix': {
           marginInlineEnd: inputAffixPadding,
         },
-
-        '&-suffix': {
-          position: 'absolute',
-          insetBlockStart: 0,
-          insetInlineEnd: 0,
-          zIndex: 1,
-          height: '100%',
-          marginInlineEnd: paddingInline,
-          marginInlineStart: inputAffixPadding,
-        },
       },
+      ...genSuffixStyle(token),
     },
   };
 };

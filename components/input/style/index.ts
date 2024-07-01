@@ -132,7 +132,7 @@ export const genInputGroupStyle = (token: InputToken): CSSObject => {
     },
 
     [`> ${componentCls}`]: {
-      display: 'table-cell',
+      display: 'flex',
 
       '&:not(:first-child):not(:last-child)': {
         borderRadius: 0,
