@@ -6,6 +6,7 @@ import CSSMotion from 'rc-motion';
 import { useEvent } from 'rc-util';
 import useMergedState from 'rc-util/lib/hooks/useMergedState';
 
+import { useZIndex } from '../_util/hooks/useZIndex';
 import { devUseWarning } from '../_util/warning';
 import type { ConfigConsumerProps } from '../config-provider';
 import { ConfigContext } from '../config-provider';
@@ -48,6 +49,11 @@ const FloatButtonGroup: React.FC<FloatButtonGroupProps> = (props) => {
     [`${groupPrefixCls}-${shape}`]: shape,
     [`${groupPrefixCls}-${shape}-shadow`]: !trigger,
   });
+
+  // ============================ zIndex ============================
+  const [zIndex] = useZIndex('FloatButton', style?.zIndex as number);
+
+  const mergedStyle: React.CSSProperties = { ...style, zIndex };
 
   const wrapperCls = classNames(hashId, `${groupPrefixCls}-wrap`);
 
@@ -123,14 +129,7 @@ const FloatButtonGroup: React.FC<FloatButtonGroupProps> = (props) => {
   // ========================= Render =========================
   return wrapCSSVar(
     <FloatButtonGroupProvider value={shape}>
-      <div
-        ref={floatButtonGroupRef}
-        className={groupCls}
-        style={style}
-        // Hover trigger
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      >
+      <div ref={floatButtonGroupRef} className={groupCls} style={mergedStyle} {...hoverAction}>
         {trigger && ['click', 'hover'].includes(trigger) ? (
           <>
             <CSSMotion visible={open} motionName={`${groupPrefixCls}-wrap`}>
