@@ -32,70 +32,26 @@ const columns: TableColumnsType<DataType> = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: 1,
-    name: 'John Brown sr.',
-    age: 60,
-    address: 'New York No. 1 Lake Park',
-    children: [
-      {
-        key: 11,
-        name: 'John Brown',
-        age: 42,
-        address: 'New York No. 2 Lake Park',
-      },
-      {
-        key: 12,
-        name: 'John Brown jr.',
-        age: 30,
-        address: 'New York No. 3 Lake Park',
-        children: [
-          {
-            key: 121,
-            name: 'Jimmy Brown',
-            age: 16,
-            address: 'New York No. 3 Lake Park',
-          },
-        ],
-      },
-      {
-        key: 13,
-        name: 'Jim Green sr.',
-        age: 72,
-        address: 'London No. 1 Lake Park',
-        children: [
-          {
-            key: 131,
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 2 Lake Park',
-            children: [
-              {
-                key: 1311,
-                name: 'Jim Green jr.',
-                age: 25,
-                address: 'London No. 3 Lake Park',
-              },
-              {
-                key: 1312,
-                name: 'Jimmy Green sr.',
-                age: 18,
-                address: 'London No. 4 Lake Park',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    key: 2,
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-];
+const dataSource = Array.from({ length: 15 }).map<DataType>((_, i) => ({
+  key: `key${i}`,
+  name: `Edward ${i}`,
+  age: 32,
+  address: `London Park no. ${i}`,
+  children: [
+    {
+      key: `subKey${i}1`,
+      name: 'Brown',
+      age: 16,
+      address: 'New York No. 3 Lake Park',
+    },
+    {
+      key: `subKey${i}2`,
+      name: 'Jimmy',
+      age: 16,
+      address: 'New York No. 3 Lake Park',
+    },
+  ],
+}));
 
 // rowSelection objects indicates the need for row selection
 const rowSelection: TableRowSelection<DataType> = {
@@ -112,16 +68,20 @@ const rowSelection: TableRowSelection<DataType> = {
 
 const App: React.FC = () => {
   const [checkStrictly, setCheckStrictly] = useState(false);
+  const [preserveSelectedRowKeys, setPreserveSelectedRowKeys] = useState(true);
 
   return (
     <>
       <Space align="center" style={{ marginBottom: 16 }}>
         CheckStrictly: <Switch checked={checkStrictly} onChange={setCheckStrictly} />
+        preserveSelectedRowKeys:{' '}
+        <Switch checked={preserveSelectedRowKeys} onChange={setPreserveSelectedRowKeys} />
       </Space>
       <Table<DataType>
         columns={columns}
-        rowSelection={{ ...rowSelection, checkStrictly }}
-        dataSource={data}
+        rowSelection={{ ...rowSelection, checkStrictly, preserveSelectedRowKeys }}
+        dataSource={dataSource}
+        pagination={{ defaultPageSize: 5 }}
       />
     </>
   );
