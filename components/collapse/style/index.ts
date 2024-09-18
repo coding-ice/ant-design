@@ -287,7 +287,7 @@ const genBorderlessStyle: GenerateStyle<CollapseToken> = (token) => {
       },
 
       [`> ${componentCls}-item > ${componentCls}-content`]: {
-        backgroundColor: 'transparent',
+        backgroundColor: token.contentBg || 'transparent',
         borderTop: 0,
       },
 
