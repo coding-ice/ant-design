@@ -70,6 +70,7 @@ export type ImagePopupSemanticClassNames = {
   body?: string;
   footer?: string;
   actions?: string;
+  close?: string;
 };
 
 export type ImagePopupSemanticStyles = {
